@@ -232,8 +232,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📧 Contact
 
-- **Email**: your-email@example.com
-- **GitHub Issues**: [Report bugs or request features](https://github.com/yourusername/remote-productivity/issues)
+- **Email**: yakendog_2005@msn.com
+- **GitHub Issues**: [Report bugs or request features](https://github.com/hideookuda-coder/remote-productivity/issues)
 
 ## ❓ FAQ
 
