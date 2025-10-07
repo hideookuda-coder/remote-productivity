@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="bi bi-journal-plus"></i> 新しい日記を書く</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('add_journal') }}">
+                    <div class="mb-3">
+                        <label for="date" class="form-label">日付</label>
+                        <input type="date" class="form-control" id="date" name="date" 
+                               value="{{ datetime.utcnow().strftime('%Y-%m-%d') }}">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="title" class="form-label">タイトル</label>
+                        <input type="text" class="form-control" id="title" name="title"
+                               placeholder="今日のタイトル（任意）">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="content" class="form-label">内容 <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="content" name="content" rows="10" required autofocus
+                                  placeholder="今日あったこと、感じたこと、考えたことを自由に書いてください..."></textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="mood" class="form-label">気分</label>
+                            <select class="form-select" id="mood" name="mood">
+                                <option value="">選択してください</option>
+                                <option value="happy">😊 幸せ</option>
+                                <option value="excited">🎉 興奮</option>
+                                <option value="neutral">😐 普通</option>
+                                <option value="sad">😢 悲しい</option>
+                                <option value="anxious">😰 不安</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <label for="tags" class="form-label">タグ</label>
+                            <input type="text" class="form-control" id="tags" name="tags"
+                                   placeholder="仕事, 家族, 趣味（カンマ区切り）">
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="bi bi-lightbulb"></i>
+                        <strong>ヒント:</strong> 日記を書くことで、自分の感情を整理し、ストレスを軽減できます。
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check"></i> 日記を保存
+                        </button>
+                        <a href="{{ url_for('journal') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x"></i> キャンセル
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

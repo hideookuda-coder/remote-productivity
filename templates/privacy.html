@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0"><i class="bi bi-shield-check"></i> プライバシーポリシー</h3>
+            </div>
+            <div class="card-body p-4">
+                <p class="text-muted">最終更新日: 2025年10月7日</p>
+                
+                <h5 class="mt-4">1. 基本方針</h5>
+                <p>
+                    本アプリケーション「総合ライフマネジメントアプリ」（以下「本アプリ」）は、
+                    ユーザーのプライバシーを尊重し、個人情報の保護に最大限の注意を払います。
+                </p>
+                
+                <h5 class="mt-4">2. 収集する情報</h5>
+                <p>本アプリは以下の情報を収集します：</p>
+                
+                <h6 class="mt-3">2.1 ユーザーが入力する情報</h6>
+                <ul>
+                    <li>タスク・やることリストの内容</li>
+                    <li>習慣の記録</li>
+                    <li>健康データ（体重、運動時間、睡眠時間）</li>
+                    <li>学習記録</li>
+                    <li>日記・ジャーナルの内容</li>
+                    <li>カレンダーの予定</li>
+                    <li>目標設定</li>
+                    <li>メモの内容</li>
+                    <li>時間トラッキングデータ</li>
+                </ul>
+                
+                <h6 class="mt-3">2.2 自動的に生成される情報</h6>
+                <ul>
+                    <li>ポモドーロセッションの記録</li>
+                    <li>統計データ</li>
+                    <li>達成バッジの記録</li>
+                    <li>アプリ設定</li>
+                </ul>
+                
+                <h5 class="mt-4">3. 情報の保存場所</h5>
+                <div class="alert alert-success">
+                    <h6><i class="bi bi-check-circle"></i> 重要：すべてのデータはローカル保存</h6>
+                    <ul class="mb-0">
+                        <li><strong>すべてのデータはユーザーのPC内に保存されます</strong></li>
+                        <li>外部サーバーへのデータ送信は一切行いません</li>
+                        <li>インターネット接続なしでも動作します</li>
+                        <li>データベースファイル: <code>productivity.db</code></li>
+                    </ul>
+                </div>
+                
+                <h5 class="mt-4">4. 情報の利用目的</h5>
+                <p>収集した情報は以下の目的でのみ使用されます：</p>
+                <ul>
+                    <li>本アプリの機能提供</li>
+                    <li>ユーザーの生産性向上支援</li>
+                    <li>統計・グラフの表示</li>
+                    <li>達成バッジの判定</li>
+                    <li>リマインダー通知の送信</li>
+                </ul>
+                
+                <h5 class="mt-4">5. 情報の第三者提供</h5>
+                <div class="alert alert-success">
+                    <h6><i class="bi bi-shield-check"></i> 第三者提供なし</h6>
+                    <p class="mb-0">
+                        本アプリは、ユーザーの情報を第三者に提供、開示、共有することは一切ありません。
+                        すべてのデータはユーザーのPC内にのみ保存されます。
+                    </p>
+                </div>
+                
+                <h5 class="mt-4">6. Cookie・トラッキング</h5>
+                <p>
+                    本アプリは、セッション管理のために最小限のCookieを使用しますが、
+                    トラッキングや広告配信のためのCookieは使用しません。
+                </p>
+                
+                <h5 class="mt-4">7. データのセキュリティ</h5>
+                <ul>
+                    <li>データはSQLiteデータベースに暗号化なしで保存されます</li>
+                    <li>ユーザーは自身のPCのセキュリティを確保する責任があります</li>
+                    <li>定期的なバックアップを推奨します</li>
+                    <li>機密情報の入力は推奨しません</li>
+                </ul>
+                
+                <h5 class="mt-4">8. データの削除</h5>
+                <p>ユーザーは以下の方法でデータを削除できます：</p>
+                <ul>
+                    <li>各機能の削除ボタンから個別に削除</li>
+                    <li>データベースファイル（productivity.db）を削除</li>
+                    <li>アプリケーションをアンインストール</li>
+                </ul>
+                
+                <h5 class="mt-4">9. ブラウザ通知</h5>
+                <p>
+                    本アプリは、リマインダー機能でブラウザ通知を使用します。
+                    通知の許可はユーザーが任意で設定できます。
+                    通知内容はローカルで生成され、外部に送信されません。
+                </p>
+                
+                <h5 class="mt-4">10. 子供のプライバシー</h5>
+                <p>
+                    本アプリは13歳未満の子供を対象としていません。
+                    13歳未満の方が使用する場合は、保護者の監督のもとで使用してください。
+                </p>
+                
+                <h5 class="mt-4">11. プライバシーポリシーの変更</h5>
+                <p>
+                    本プライバシーポリシーは、必要に応じて変更される場合があります。
+                    変更後のポリシーは、本アプリ上に掲載された時点で効力を生じます。
+                </p>
+                
+                <h5 class="mt-4">12. お問い合わせ</h5>
+                <p>
+                    本プライバシーポリシーに関するご質問は、開発者までお問い合わせください。
+                </p>
+                
+                <div class="alert alert-info mt-4">
+                    <h6><i class="bi bi-info-circle"></i> まとめ</h6>
+                    <ul class="mb-0">
+                        <li><strong>データは100%ローカル保存</strong></li>
+                        <li><strong>外部送信なし</strong></li>
+                        <li><strong>第三者提供なし</strong></li>
+                        <li><strong>トラッキングなし</strong></li>
+                        <li><strong>広告なし</strong></li>
+                    </ul>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="{{ url_for('terms') }}" class="btn btn-outline-primary me-2">
+                        <i class="bi bi-file-text"></i> 利用規約
+                    </a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+                        <i class="bi bi-house"></i> ダッシュボードへ戻る
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

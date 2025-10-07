@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="bi bi-plus-circle"></i> 健康記録を追加</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('add_health_log') }}">
+                    <div class="mb-3">
+                        <label for="date" class="form-label">日付</label>
+                        <input type="date" class="form-control" id="date" name="date" 
+                               value="{{ datetime.utcnow().strftime('%Y-%m-%d') }}">
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="weight" class="form-label">体重 (kg)</label>
+                            <input type="number" step="0.1" class="form-control" id="weight" name="weight">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="exercise_minutes" class="form-label">運動時間 (分)</label>
+                            <input type="number" class="form-control" id="exercise_minutes" name="exercise_minutes">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="water_intake" class="form-label">水分摂取量 (ml)</label>
+                            <input type="number" class="form-control" id="water_intake" name="water_intake">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="sleep_hours" class="form-label">睡眠時間 (時間)</label>
+                            <input type="number" step="0.5" class="form-control" id="sleep_hours" name="sleep_hours">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="mood" class="form-label">気分</label>
+                        <select class="form-select" id="mood" name="mood">
+                            <option value="">選択してください</option>
+                            <option value="great">最高</option>
+                            <option value="good">良い</option>
+                            <option value="okay">普通</option>
+                            <option value="bad">悪い</option>
+                            <option value="terrible">最悪</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="note" class="form-label">メモ</label>
+                        <textarea class="form-control" id="note" name="note" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check"></i> 記録を保存
+                        </button>
+                        <a href="{{ url_for('health') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x"></i> キャンセル
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="bi bi-calendar-plus"></i> 新しい予定を追加</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('add_calendar_event') }}">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">予定名 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="title" name="title" required autofocus
+                               placeholder="例: 会議、歯医者、ジム">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="category" class="form-label">カテゴリ <span class="text-danger">*</span></label>
+                        <select class="form-select" id="category" name="category" required>
+                            <option value="work">仕事</option>
+                            <option value="meeting">会議</option>
+                            <option value="personal">個人</option>
+                            <option value="health">健康</option>
+                            <option value="study">学習</option>
+                            <option value="other">その他</option>
+                        </select>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="start_date" class="form-label">開始日 <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="start_date" name="start_date" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="start_time" class="form-label">開始時刻 <span class="text-danger">*</span></label>
+                            <input type="time" class="form-control" id="start_time" name="start_time" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="end_date" class="form-label">終了日</label>
+                            <input type="date" class="form-control" id="end_date" name="end_date">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="end_time" class="form-label">終了時刻</label>
+                            <input type="time" class="form-control" id="end_time" name="end_time">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="location" class="form-label">場所</label>
+                        <input type="text" class="form-control" id="location" name="location"
+                               placeholder="例: 会議室A、自宅、オンライン">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="description" class="form-label">詳細</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"
+                                  placeholder="予定の詳細や備考"></textarea>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="bi bi-bell"></i> 予定の30分前に通知でお知らせします
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check"></i> 予定を追加
+                        </button>
+                        <a href="{{ url_for('calendar_view') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x"></i> キャンセル
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// 今日の日付をデフォルトに設定
+document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('start_date').value = today;
+    document.getElementById('end_date').value = today;
+    
+    // 現在時刻の1時間後をデフォルトに
+    const now = new Date();
+    now.setHours(now.getHours() + 1);
+    const timeString = now.toTimeString().slice(0, 5);
+    document.getElementById('start_time').value = timeString;
+});
+</script>
+{% endblock %}

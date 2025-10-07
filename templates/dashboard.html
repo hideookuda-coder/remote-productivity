@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2 class="text-white fw-bold">
+            <i class="bi bi-speedometer2"></i> ダッシュボード
+        </h2>
+        <p class="text-white-50">今日の生産性を確認しましょう</p>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="stat-card">
+            <i class="bi bi-alarm display-4"></i>
+            <div class="stat-number">{{ today_sessions }}</div>
+            <div class="stat-label">今日のポモドーロ</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <i class="bi bi-clock-history display-4"></i>
+            <div class="stat-number">{{ today_minutes }}</div>
+            <div class="stat-label">今日の作業時間（分）</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <i class="bi bi-check-circle display-4"></i>
+            <div class="stat-number">{{ completed_today }}</div>
+            <div class="stat-label">今日完了したタスク</div>
+        </div>
+    </div>
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-play-circle"></i> 進行中のやること</h5>
+                <a href="{{ url_for('tasks') }}" class="btn btn-sm btn-light">すべて表示</a>
+            </div>
+            <div class="card-body">
+                {% if active_tasks %}
+                    <div class="list-group list-group-flush">
+                        {% for task in active_tasks %}
+                            <div class="list-group-item border-0 px-0">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="h4 mb-0">{{ task.title }}</div>
+                                        <small class="text-muted">
+                                            <i class="bi bi-alarm"></i> {{ task.completed_pomodoros }}/{{ task.estimated_pomodoros }} ポモドーロ
+                                        </small>
+                                    </div>
+                                    <span class="badge priority-{{ task.priority }}">
+                                        {% if task.priority == 'high' %}高
+                                        {% elif task.priority == 'medium' %}中
+                                        {% else %}低{% endif %}
+                                    </span>
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <div class="h4 mb-0">{{ task.title }}</div>
+                                    <small class="text-muted">
+                                        <i class="bi bi-alarm"></i> {{ task.completed_pomodoros }}/{{ task.estimated_pomodoros }} ポモドーロ
+                                    </small>
+                                </div>
+                                <span class="badge priority-{{ task.priority }}">
+                                    {% if task.priority == 'high' %}高
+                                    {% elif task.priority == 'medium' %}中
+                                    {% else %}低{% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="list-group list-group-flush">
+                        {% for task in pending_tasks %}
+                        <div class="list-group-item border-0 px-0">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">{{ task.title }}</h6>
+                                    {% if task.due_date %}
+                                    <small class="text-muted">
+                                        <i class="bi bi-calendar"></i> {{ task.due_date.strftime('%Y年%m月%d日') }}
+                                    </small>
+                                    {% endif %}
+                                </div>
+                                <span class="badge priority-{{ task.priority }}">
+                                    {% if task.priority == 'high' %}高
+                                    {% elif task.priority == 'medium' %}中
+                                    {% else %}低{% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center py-4">未着手のタスクはありません</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <h4 class="mb-4">🚀 クイックアクション</h4>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a href="{{ url_for('pomodoro') }}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-alarm"></i> 集中タイマー開始
+                    </a>
+                    <a href="{{ url_for('add_task') }}" class="btn btn-success btn-lg">
+                        <i class="bi bi-plus-circle"></i> やること追加
+                    </a>
+                    <a href="{{ url_for('habits') }}" class="btn btn-warning btn-lg">
+                        <i class="bi bi-check-circle"></i> 習慣記録
+                    </a>
+                    <a href="{{ url_for('add_health_log') }}" class="btn btn-danger btn-lg">
+                        <i class="bi bi-heart-pulse"></i> 健康記録
+                    </a>
+                    <a href="{{ url_for('add_journal') }}" class="btn btn-secondary btn-lg">
+                        <i class="bi bi-journal-plus"></i> 日記を書く
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if not active_tasks and not pending_tasks and completed_today == 0 and today_sessions == 0 %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="alert alert-info">
+            <h5><i class="bi bi-info-circle"></i> 初めての方へ</h5>
+            <p class="mb-2">このアプリの使い方：</p>
+            <ol class="mb-0">
+                <li><strong>やることを追加</strong>：「やること追加」ボタンから今日やることを登録</li>
+                <li><strong>集中タイマー開始</strong>：25分の集中作業タイマーをスタート</li>
+                <li><strong>習慣を記録</strong>：毎日続けたい習慣をチェック</li>
+                <li><strong>グラフで確認</strong>：ナビゲーションの「振り返り」から進捗を確認</li>
+            </ol>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

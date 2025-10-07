@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2 class="text-white fw-bold">
+            <i class="bi bi-check-circle"></i> 習慣トラッカー
+        </h2>
+        <p class="text-white-50">毎日の習慣を記録して、継続の力を実感しましょう</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('add_habit') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> 新しい習慣
+        </a>
+    </div>
+</div>
+
+{% if habits_data %}
+    <div class="row">
+        {% for data in habits_data %}
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h5 class="card-title mb-1">{{ data.habit.name }}</h5>
+                            {% if data.habit.description %}
+                            <p class="text-muted small mb-0">{{ data.habit.description }}</p>
+                            {% endif %}
+                        </div>
+                        <span class="badge bg-{{ data.habit.color }}">
+                            {{ data.habit.frequency }}
+                        </span>
+                    </div>
+                    
+                    <div class="row text-center mb-3">
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded">
+                                <div class="h3 mb-0 text-warning">
+                                    <i class="bi bi-fire"></i> {{ data.streak }}
+                                </div>
+                                <small class="text-muted">連続日数</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded">
+                                <div class="h3 mb-0">
+                                    {% if data.completed_today %}
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    {% else %}
+                                    <i class="bi bi-circle text-muted"></i>
+                                    {% endif %}
+                                </div>
+                                <small class="text-muted">今日の状態</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button onclick="toggleHabit({{ data.habit.id }})" 
+                                class="btn btn-{% if data.completed_today %}outline-secondary{% else %}success{% endif %} flex-grow-1">
+                            <i class="bi bi-{% if data.completed_today %}x{% else %}check{% endif %}"></i>
+                            {% if data.completed_today %}完了を取り消し{% else %}完了{% endif %}
+                        </button>
+                        <form method="POST" action="{{ url_for('delete_habit', habit_id=data.habit.id) }}" 
+                              onsubmit="return confirm('本当に削除しますか？')" class="d-inline">
+                            <button type="submit" class="btn btn-outline-danger">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <i class="bi bi-check-circle display-1 text-muted mb-3"></i>
+            <h4 class="text-muted">習慣がありません</h4>
+            <p class="text-muted">新しい習慣を追加して、良い習慣を身につけましょう！</p>
+            <a href="{{ url_for('add_habit') }}" class="btn btn-primary">
+                <i class="bi bi-plus-lg"></i> 習慣を追加
+            </a>
+        </div>
+    </div>
+{% endif %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+function toggleHabit(habitId) {
+    fetch(`/habits/${habitId}/toggle`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        }
+    });
+}
+</script>
+{% endblock %}
+{% endblock %}

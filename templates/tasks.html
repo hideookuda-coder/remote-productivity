@@ -1,0 +1,160 @@
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2 class="text-white fw-bold">
+            <i class="bi bi-check2-square"></i> やることリスト
+        </h2>
+        <p class="text-white-50">今日やることを管理</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('add_task') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> 新しいタスク
+        </a>
+    </div>
+</div>
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="btn-group" role="group">
+            <a href="{{ url_for('tasks', status='all') }}" 
+               class="btn btn-outline-primary {% if filter_status == 'all' %}active{% endif %}">
+                すべて
+            </a>
+            <a href="{{ url_for('tasks', status='todo') }}" 
+               class="btn btn-outline-primary {% if filter_status == 'todo' %}active{% endif %}">
+                未着手
+            </a>
+            <a href="{{ url_for('tasks', status='in_progress') }}" 
+               class="btn btn-outline-primary {% if filter_status == 'in_progress' %}active{% endif %}">
+                進行中
+            </a>
+            <a href="{{ url_for('tasks', status='completed') }}" 
+               class="btn btn-outline-primary {% if filter_status == 'completed' %}active{% endif %}">
+                完了
+            </a>
+        </div>
+    </div>
+</div>
+
+{% if not tasks %}
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <i class="bi bi-inbox display-1 text-muted mb-3"></i>
+            <h4 class="text-muted">タスクがありません</h4>
+            <p class="text-muted mb-4">新しいタスクを追加して、生産性を向上させましょう！</p>
+            <a href="{{ url_for('add_task') }}" class="btn btn-primary btn-lg">
+                <i class="bi bi-plus-lg"></i> 最初のタスクを追加
+            </a>
+            
+            <div class="alert alert-info mt-4 text-start">
+                <h6><i class="bi bi-lightbulb"></i> タスク管理のコツ</h6>
+                <ul class="mb-0 small">
+                    <li><strong>優先度を設定</strong>：重要なタスクは「高」に設定</li>
+                    <li><strong>期限を設定</strong>：締め切りがあるタスクは期限を入力</li>
+                    <li><strong>ポモドーロ数を見積もる</strong>：必要な作業時間を予測</li>
+                    <li><strong>小さく分割</strong>：大きなタスクは小さく分けると達成しやすい</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="row">
+        {% for task in tasks %}
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h5 class="card-title mb-0">{{ task.title }}</h5>
+                        <span class="badge priority-{{ task.priority }}">
+                            {% if task.priority == 'high' %}高優先度
+                            {% elif task.priority == 'medium' %}中優先度
+                            {% else %}低優先度{% endif %}
+                        </span>
+                    </div>
+                    
+                    {% if task.description %}
+                    <p class="card-text text-muted">{{ task.description }}</p>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <small class="text-muted">
+                            <i class="bi bi-alarm"></i> 
+                            {{ task.completed_pomodoros }}/{{ task.estimated_pomodoros }} ポモドーロ完了
+                        </small>
+                        <div class="progress mt-2" style="height: 8px;">
+                            <div class="progress-bar bg-success" role="progressbar" 
+                                 style="width: {{ (task.completed_pomodoros / task.estimated_pomodoros * 100) if task.estimated_pomodoros > 0 else 0 }}%">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if task.due_date %}
+                    <div class="mb-3">
+                        <small class="text-muted">
+                            <i class="bi bi-calendar"></i> 
+                            期限: {{ task.due_date.strftime('%Y年%m月%d日') }}
+                        </small>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <span class="badge bg-secondary">
+                            {% if task.status == 'todo' %}未着手
+                            {% elif task.status == 'in_progress' %}進行中
+                            {% else %}完了{% endif %}
+                        </span>
+                        {% if task.completed_at %}
+                        <small class="text-muted ms-2">
+                            {{ task.completed_at.strftime('%Y年%m月%d日') }} 完了
+                        </small>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('edit_task', task_id=task.id) }}" 
+                           class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-pencil"></i> 編集
+                        </a>
+                        {% if task.status != 'completed' %}
+                        <button onclick="completeTask({{ task.id }})" 
+                                class="btn btn-sm btn-success">
+                            <i class="bi bi-check"></i> 完了
+                        </button>
+                        {% endif %}
+                        <form method="POST" action="{{ url_for('delete_task', task_id=task.id) }}" 
+                              onsubmit="return confirm('本当に削除しますか？')" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i> 削除
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+function completeTask(taskId) {
+    if (confirm('このタスクを完了としてマークしますか？')) {
+        fetch(`/tasks/${taskId}/complete`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('エラーが発生しました: ' + data.error);
+            }
+        });
+    }
+}
+</script>
+{% endblock %}
+{% endblock %}

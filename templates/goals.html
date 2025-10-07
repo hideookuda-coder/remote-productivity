@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2 class="text-white fw-bold">
+            <i class="bi bi-bullseye"></i> 目標設定
+        </h2>
+        <p class="text-white-50">短期・中期・長期の目標を管理</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('add_goal') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> 新しい目標
+        </a>
+    </div>
+</div>
+
+{% if active_goals %}
+    <div class="row">
+        {% for goal in active_goals %}
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h5 class="card-title mb-1">{{ goal.title }}</h5>
+                            <span class="badge bg-{% if goal.goal_type == 'short' %}success{% elif goal.goal_type == 'medium' %}warning{% else %}info{% endif %}">
+                                {% if goal.goal_type == 'short' %}短期（1週間）
+                                {% elif goal.goal_type == 'medium' %}中期（1ヶ月）
+                                {% else %}長期（3ヶ月以上）{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    {% if goal.description %}
+                    <p class="text-muted small">{{ goal.description }}</p>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <small class="text-muted">進捗</small>
+                            <small class="text-muted">{{ goal.progress }}%</small>
+                        </div>
+                        <div class="progress" style="height: 15px;">
+                            <div class="progress-bar bg-success" role="progressbar" 
+                                 style="width: {{ goal.progress }}%"></div>
+                        </div>
+                    </div>
+                    
+                    {% if goal.target_date %}
+                    <div class="mb-3">
+                        <small class="text-muted">
+                            <i class="bi bi-calendar-event"></i> 
+                            目標日: {{ goal.target_date.strftime('%Y年%m月%d日') }}
+                        </small>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-primary" onclick="updateProgress({{ goal.id }})">
+                            <i class="bi bi-arrow-up"></i> 進捗更新
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <i class="bi bi-bullseye display-1 text-muted mb-3"></i>
+            <h4 class="text-muted">目標がありません</h4>
+            <p class="text-muted mb-4">新しい目標を設定して、達成を目指しましょう！</p>
+            <a href="{{ url_for('add_goal') }}" class="btn btn-primary btn-lg">
+                <i class="bi bi-plus-lg"></i> 最初の目標を設定
+            </a>
+        </div>
+    </div>
+{% endif %}
+
+{% if completed_goals %}
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-trophy"></i> 達成した目標</h5>
+    </div>
+    <div class="card-body">
+        <div class="list-group list-group-flush">
+            {% for goal in completed_goals %}
+            <div class="list-group-item">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="mb-1">{{ goal.title }}</h6>
+                        <small class="text-muted">{{ goal.completed_at.strftime('%Y年%m月%d日') }} 達成</small>
+                    </div>
+                    <i class="bi bi-check-circle-fill text-success fs-3"></i>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+function updateProgress(goalId) {
+    const progress = prompt('進捗率を入力してください（0-100）:', '');
+    if (progress !== null) {
+        fetch(`/goals/${goalId}/update`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({progress: parseInt(progress)})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('進捗が更新されました！');
+                location.reload();
+            }
+        });
+    }
+}
+</script>
+{% endblock %}
+{% endblock %}

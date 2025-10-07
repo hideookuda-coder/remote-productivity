@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="text-white fw-bold">
+            <i class="bi bi-alarm"></i> 集中タイマー
+        </h2>
+        <p class="text-white-50">25分集中 + 5分休憩で効率的に作業</p>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3 class="mb-0"><i class="bi bi-alarm"></i> ポモドーロタイマー</h3>
+            </div>
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <div id="timer-display" class="display-1 fw-bold text-primary mb-3" style="font-size: 5rem;">
+                        25:00
+                    </div>
+                    <div id="session-type" class="h5 text-muted mb-4">作業セッション</div>
+                    
+                    <div class="mb-4">
+                        <select class="form-select form-select-lg" id="task-select">
+                            <option value="">タスクを選択（任意）</option>
+                            {% for task in tasks %}
+                            <option value="{{ task.id }}">
+                                {{ task.title }} ({{ task.completed_pomodoros }}/{{ task.estimated_pomodoros }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="d-grid gap-3">
+                        <button id="start-btn" class="btn btn-success btn-lg" onclick="startTimer()">
+                            <i class="bi bi-play-fill"></i> 開始
+                        </button>
+                        <button id="pause-btn" class="btn btn-warning btn-lg" onclick="pauseTimer()" style="display: none;">
+                            <i class="bi bi-pause-fill"></i> 一時停止
+                        </button>
+                        <button id="reset-btn" class="btn btn-secondary btn-lg" onclick="resetTimer()">
+                            <i class="bi bi-arrow-clockwise"></i> リセット
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="progress mb-3" style="height: 10px;">
+                    <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                </div>
+                
+                <div class="row text-center mt-4">
+                    <div class="col-4">
+                        <div class="p-3 bg-light rounded">
+                            <div class="h4 mb-0" id="pomodoro-count">0</div>
+                            <small class="text-muted">完了</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="p-3 bg-light rounded">
+                            <div class="h4 mb-0" id="session-count">1</div>
+                            <small class="text-muted">セッション</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="p-3 bg-light rounded">
+                            <div class="h4 mb-0">{{ settings.pomodoro_work_duration }}</div>
+                            <small class="text-muted">分/セッション</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="mb-3"><i class="bi bi-info-circle"></i> 集中タイマーの使い方</h5>
+                <p class="text-muted mb-2">
+                    1. <strong>{{ settings.pomodoro_work_duration }}分間</strong>集中して作業します<br>
+                    2. <strong>{{ settings.pomodoro_break_duration }}分間</strong>休憩します<br>
+                    3. これを4回繰り返したら、<strong>{{ settings.pomodoro_long_break_duration }}分間</strong>の長い休憩を取ります
+                </p>
+                <small class="text-muted">
+                    <i class="bi bi-lightbulb"></i> 
+                    タイマーの時間は<a href="{{ url_for('settings') }}">設定ページ</a>から変更できます
+                </small>
+            </div>
+        </div>
+        
+        <div class="alert alert-success mt-4">
+            <h6><i class="bi bi-check-circle"></i> 使い方</h6>
+            <ol class="mb-0 small">
+                <li>タスクを選択（任意）</li>
+                <li>「開始」ボタンをクリック</li>
+                <li>タイマーが終わるまで集中</li>
+                <li>休憩を取る</li>
+                <li>繰り返す</li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+{{ super() }}
+<script>
+let timerInterval = null;
+let timeLeft = {{ settings.pomodoro_work_duration }} * 60; // seconds
+let totalTime = {{ settings.pomodoro_work_duration }} * 60;
+let isRunning = false;
+let sessionType = 'work';
+let sessionCount = 1;
+let pomodoroCount = 0;
+let currentSessionId = null;
+
+const timerDisplay = document.getElementById('timer-display');
+const sessionTypeDisplay = document.getElementById('session-type');
+const startBtn = document.getElementById('start-btn');
+const pauseBtn = document.getElementById('pause-btn');
+const progressBar = document.getElementById('progress-bar');
+const pomodoroCountDisplay = document.getElementById('pomodoro-count');
+const sessionCountDisplay = document.getElementById('session-count');
+const taskSelect = document.getElementById('task-select');
+
+function updateDisplay() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    const progress = ((totalTime - timeLeft) / totalTime) * 100;
+    progressBar.style.width = progress + '%';
+}
+
+function startTimer() {
+    if (!isRunning) {
+        isRunning = true;
+        startBtn.style.display = 'none';
+        pauseBtn.style.display = 'block';
+        
+        // Start session on server
+        const taskId = taskSelect.value || null;
+        fetch('/api/pomodoro/start', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                session_type: sessionType,
+                task_id: taskId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            currentSessionId = data.session_id;
+        });
+        
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            updateDisplay();
+            
+            if (timeLeft <= 0) {
+                completeSession();
+            }
+        }, 1000);
+    }
+}
+
+function pauseTimer() {
+    isRunning = false;
+    clearInterval(timerInterval);
+    startBtn.style.display = 'block';
+    pauseBtn.style.display = 'none';
+}
+
+function resetTimer() {
+    pauseTimer();
+    if (sessionType === 'work') {
+        timeLeft = {{ settings.pomodoro_work_duration }} * 60;
+        totalTime = {{ settings.pomodoro_work_duration }} * 60;
+    } else if (sessionType === 'long_break') {
+        timeLeft = {{ settings.pomodoro_long_break_duration }} * 60;
+        totalTime = {{ settings.pomodoro_long_break_duration }} * 60;
+    } else {
+        timeLeft = {{ settings.pomodoro_break_duration }} * 60;
+        totalTime = {{ settings.pomodoro_break_duration }} * 60;
+    }
+    updateDisplay();
+}
+
+function completeSession() {
+    pauseTimer();
+    
+    // Complete session on server
+    if (currentSessionId) {
+        fetch(`/api/pomodoro/complete/${currentSessionId}`, {
+            method: 'POST'
+        });
+    }
+    
+    // Play notification sound (browser notification)
+    if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('ポモドーロ完了！', {
+            body: sessionType === 'work' ? '休憩時間です！' : '次の作業を始めましょう！',
+            icon: '/static/icon.png'
+        });
+    }
+    
+    // Switch session type
+    if (sessionType === 'work') {
+        pomodoroCount++;
+        pomodoroCountDisplay.textContent = pomodoroCount;
+        
+        if (sessionCount % 4 === 0) {
+            sessionType = 'long_break';
+            sessionTypeDisplay.textContent = '長い休憩';
+            timeLeft = {{ settings.pomodoro_long_break_duration }} * 60;
+            totalTime = {{ settings.pomodoro_long_break_duration }} * 60;
+        } else {
+            sessionType = 'break';
+            sessionTypeDisplay.textContent = '休憩';
+            timeLeft = {{ settings.pomodoro_break_duration }} * 60;
+            totalTime = {{ settings.pomodoro_break_duration }} * 60;
+        }
+    } else {
+        sessionType = 'work';
+        sessionTypeDisplay.textContent = '作業セッション';
+        timeLeft = {{ settings.pomodoro_work_duration }} * 60;
+        totalTime = {{ settings.pomodoro_work_duration }} * 60;
+        sessionCount++;
+        sessionCountDisplay.textContent = sessionCount;
+    }
+    
+    updateDisplay();
+    alert(sessionType === 'work' ? '休憩完了！次の作業を始めましょう！' : 'ポモドーロ完了！休憩しましょう！');
+}
+
+// Request notification permission
+if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+}
+
+updateDisplay();
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h2 class="text-white fw-bold">
+            <i class="bi bi-calendar3"></i> カレンダー
+        </h2>
+        <p class="text-white-50">すべての活動と予定を一覧表示</p>
+    </div>
+    <div class="col-md-6 text-end">
+        <a href="{{ url_for('add_calendar_event') }}" class="btn btn-success mb-2">
+            <i class="bi bi-plus-lg"></i> 予定を追加
+        </a>
+        <div class="btn-group">
+            <a href="{{ url_for('calendar_view', year=year, month=month-1 if month > 1 else 12) }}" class="btn btn-outline-light">
+                <i class="bi bi-chevron-left"></i> 前月
+            </a>
+            <button class="btn btn-light">{{ year }}年{{ month }}月</button>
+            <a href="{{ url_for('calendar_view', year=year, month=month+1 if month < 12 else 1) }}" class="btn btn-outline-light">
+                次月 <i class="bi bi-chevron-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body p-4">
+        <div class="row g-3 mb-4">
+            <div class="col-md-2">
+                <div class="p-3 bg-warning bg-opacity-10 rounded">
+                    <i class="bi bi-calendar-event text-warning"></i>
+                    <strong class="ms-2">{{ events|length }}</strong> 予定
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="p-3 bg-primary bg-opacity-10 rounded">
+                    <i class="bi bi-check2-square text-primary"></i>
+                    <strong class="ms-2">{{ tasks|length }}</strong> やること
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="p-3 bg-success bg-opacity-10 rounded">
+                    <i class="bi bi-check-circle text-success"></i>
+                    <strong class="ms-2">{{ habits|length }}</strong> 習慣
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="p-3 bg-danger bg-opacity-10 rounded">
+                    <i class="bi bi-heart-pulse text-danger"></i>
+                    <strong class="ms-2">{{ health_logs|length }}</strong> 健康
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="p-3 bg-info bg-opacity-10 rounded">
+                    <i class="bi bi-journal-text text-info"></i>
+                    <strong class="ms-2">{{ journal_entries|length }}</strong> 日記
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="p-3 bg-secondary bg-opacity-10 rounded">
+                    <i class="bi bi-bell text-secondary"></i>
+                    <strong class="ms-2" id="reminder-count">0</strong> 通知
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert alert-warning mb-4" id="reminder-alert" style="display: none;">
+            <h6><i class="bi bi-bell-fill"></i> リマインダー</h6>
+            <div id="reminder-list"></div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="text-center">
+                        <th>日</th>
+                        <th>月</th>
+                        <th>火</th>
+                        <th>水</th>
+                        <th>木</th>
+                        <th>金</th>
+                        <th>土</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for week in range(6) %}
+                    <tr>
+                        {% for day in range(7) %}
+                        {% set day_num = week * 7 + day + 1 %}
+                        <td class="p-2" style="height: 100px; vertical-align: top; cursor: pointer;" 
+                            onclick="openAddEventModal({{ year }}, {{ month }}, {{ day_num }})">
+                            {% if day_num <= 31 %}
+                                <div class="fw-bold mb-2">{{ day_num }}</div>
+                                <div class="small">
+                                    {% for event in events %}
+                                        {% if event.start_time.day == day_num %}
+                                            <div class="badge mb-1 w-100 text-start
+                                                {% if event.category == 'work' %}bg-primary
+                                                {% elif event.category == 'meeting' %}bg-success
+                                                {% elif event.category == 'personal' %}bg-info
+                                                {% elif event.category == 'health' %}bg-danger
+                                                {% elif event.category == 'study' %}bg-warning
+                                                {% else %}bg-secondary{% endif %}" 
+                                                title="{{ event.title }} - {{ event.start_time.strftime('%H:%M') }}">
+                                                <i class="bi bi-calendar-event"></i> {{ event.start_time.strftime('%H:%M') }} {{ event.title[:10] }}
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% for task in tasks %}
+                                        {% if task.due_date and task.due_date.day == day_num %}
+                                            <div class="badge bg-primary bg-opacity-50 mb-1 w-100 text-start">
+                                                <i class="bi bi-check2-square"></i> {{ task.title[:12] }}
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% for log in health_logs %}
+                                        {% if log.date.day == day_num %}
+                                            <div class="badge bg-danger bg-opacity-50 mb-1 w-100 text-start">
+                                                <i class="bi bi-heart-pulse"></i> 健康
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% for entry in journal_entries %}
+                                        {% if entry.date.day == day_num %}
+                                            <div class="badge bg-info bg-opacity-50 mb-1 w-100 text-start">
+                                                <i class="bi bi-journal-text"></i> 日記
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-info mt-4">
+    <h6><i class="bi bi-info-circle"></i> カレンダーの使い方</h6>
+    <ul class="mb-0 small">
+        <li><strong>日付をクリック</strong>: カレンダーの日付をクリックすると予定追加フォームが開きます</li>
+        <li><strong>予定の色分け</strong>: 仕事(青)、会議(緑)、個人(水色)、健康(赤)、学習(黄)、その他(灰色)</li>
+        <li><strong>リマインダー</strong>: 予定の30分前に自動で通知されます</li>
+        <li><strong>予定追加ボタン</strong>: 上部の「予定を追加」ボタンからも登録できます</li>
+        <li>前月/次月ボタンで月を切り替えられます</li>
+    </ul>
+</div>
+
+<!-- 予定追加モーダル -->
+<div class="modal fade" id="addEventModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-calendar-plus"></i> 予定を追加</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('add_calendar_event') }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="modal_title" class="form-label">予定名 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="modal_title" name="title" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="modal_category" class="form-label">カテゴリ</label>
+                        <select class="form-select" id="modal_category" name="category">
+                            <option value="work">仕事</option>
+                            <option value="meeting">会議</option>
+                            <option value="personal">個人</option>
+                            <option value="health">健康</option>
+                            <option value="study">学習</option>
+                            <option value="other">その他</option>
+                        </select>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label for="modal_start_date" class="form-label">開始日</label>
+                            <input type="date" class="form-control" id="modal_start_date" name="start_date" required>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label for="modal_start_time" class="form-label">開始時刻</label>
+                            <input type="time" class="form-control" id="modal_start_time" name="start_time" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label for="modal_end_date" class="form-label">終了日</label>
+                            <input type="date" class="form-control" id="modal_end_date" name="end_date">
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label for="modal_end_time" class="form-label">終了時刻</label>
+                            <input type="time" class="form-control" id="modal_end_time" name="end_time">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="modal_location" class="form-label">場所</label>
+                        <input type="text" class="form-control" id="modal_location" name="location">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="modal_description" class="form-label">詳細</label>
+                        <textarea class="form-control" id="modal_description" name="description" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                    <button type="submit" class="btn btn-primary">予定を追加</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+{{ super() }}
+<script>
+// 日付クリックで予定追加モーダルを開く
+function openAddEventModal(year, month, day) {
+    // 日付を設定
+    const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    document.getElementById('modal_start_date').value = dateStr;
+    document.getElementById('modal_end_date').value = dateStr;
+    
+    // 現在時刻の1時間後をデフォルトに
+    const now = new Date();
+    now.setHours(now.getHours() + 1);
+    const timeString = now.toTimeString().slice(0, 5);
+    document.getElementById('modal_start_time').value = timeString;
+    
+    // モーダルを表示
+    const modal = new bootstrap.Modal(document.getElementById('addEventModal'));
+    modal.show();
+    
+    // イベント伝播を停止
+    event.stopPropagation();
+}
+
+// リマインダーチェック機能
+function checkReminders() {
+    fetch('/api/check_reminders')
+        .then(response => response.json())
+        .then(data => {
+            if (data.reminders && data.reminders.length > 0) {
+                const reminderAlert = document.getElementById('reminder-alert');
+                const reminderList = document.getElementById('reminder-list');
+                const reminderCount = document.getElementById('reminder-count');
+                
+                reminderAlert.style.display = 'block';
+                reminderList.innerHTML = '';
+                
+                data.reminders.forEach(reminder => {
+                    const div = document.createElement('div');
+                    div.className = 'mb-2';
+                    div.innerHTML = `
+                        <strong>${reminder.title}</strong> - ${reminder.start_time}開始
+                        <span class="badge bg-warning">${getCategoryName(reminder.category)}</span>
+                    `;
+                    reminderList.appendChild(div);
+                    
+                    // ブラウザ通知
+                    if ('Notification' in window && Notification.permission === 'granted') {
+                        new Notification('予定のリマインダー', {
+                            body: `${reminder.title} が ${reminder.start_time} に開始します`,
+                            icon: '/static/icon.png'
+                        });
+                    }
+                });
+                
+                reminderCount.textContent = data.reminders.length;
+            }
+        })
+        .catch(error => console.error('リマインダーチェックエラー:', error));
+}
+
+function getCategoryName(category) {
+    const categories = {
+        'work': '仕事',
+        'meeting': '会議',
+        'personal': '個人',
+        'health': '健康',
+        'study': '学習',
+        'other': 'その他'
+    };
+    return categories[category] || category;
+}
+
+// 通知の許可をリクエスト
+if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+}
+
+// 5分ごとにリマインダーをチェック
+checkReminders();
+setInterval(checkReminders, 5 * 60 * 1000);
+</script>
+{% endblock %}
+{% endblock %}

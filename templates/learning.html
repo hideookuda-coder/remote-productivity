@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2 class="text-white fw-bold">
+            <i class="bi bi-book"></i> 学習管理
+        </h2>
+        <p class="text-white-50">スキルアップの進捗を記録・管理</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('add_learning') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> 新しい学習項目
+        </a>
+    </div>
+</div>
+
+{% if items %}
+    <div class="row">
+        {% for item in items %}
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h5 class="card-title mb-1">{{ item.title }}</h5>
+                            {% if item.category %}
+                            <span class="badge bg-info">{{ item.category }}</span>
+                            {% endif %}
+                        </div>
+                        <span class="badge bg-{% if item.status == 'completed' %}success{% elif item.status == 'learning' %}primary{% else %}secondary{% endif %}">
+                            {% if item.status == 'completed' %}完了
+                            {% elif item.status == 'learning' %}学習中
+                            {% else %}計画中{% endif %}
+                        </span>
+                    </div>
+                    
+                    {% if item.description %}
+                    <p class="text-muted small">{{ item.description }}</p>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <small class="text-muted">進捗</small>
+                            <small class="text-muted">{{ item.progress }}%</small>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-success" role="progressbar" 
+                                 style="width: {{ item.progress }}%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <div class="p-2 bg-light rounded text-center">
+                                <i class="bi bi-clock-history text-primary"></i>
+                                <div class="fw-bold">{{ item.total_hours|round(1) }}h</div>
+                                <small class="text-muted">学習時間</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 bg-light rounded text-center">
+                                <i class="bi bi-calendar-event text-warning"></i>
+                                <div class="fw-bold">
+                                    {% if item.target_date %}
+                                    {{ item.target_date.strftime('%m/%d') }}
+                                    {% else %}-{% endif %}
+                                </div>
+                                <small class="text-muted">目標日</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-primary" onclick="addSession({{ item.id }})">
+                            <i class="bi bi-plus"></i> セッション追加
+                        </button>
+                        <button class="btn btn-sm btn-outline-success" onclick="updateProgress({{ item.id }})">
+                            <i class="bi bi-arrow-up"></i> 進捗更新
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <i class="bi bi-book display-1 text-muted mb-3"></i>
+            <h4 class="text-muted">学習項目がありません</h4>
+            <p class="text-muted">新しいスキルの学習を始めましょう！</p>
+            <a href="{{ url_for('add_learning') }}" class="btn btn-primary">
+                <i class="bi bi-plus-lg"></i> 学習項目を追加
+            </a>
+        </div>
+    </div>
+{% endif %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+function addSession(itemId) {
+    const duration = prompt('学習時間を入力してください（時間）:', '1');
+    if (duration) {
+        const note = prompt('メモ（任意）:', '');
+        fetch(`/learning/${itemId}/session`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({duration: parseFloat(duration), note: note})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('セッションが追加されました！');
+                location.reload();
+            }
+        });
+    }
+}
+
+function updateProgress(itemId) {
+    const progress = prompt('進捗率を入力してください（0-100）:', '');
+    if (progress) {
+        fetch(`/learning/${itemId}/update`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({progress: parseInt(progress)})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('進捗が更新されました！');
+                location.reload();
+            }
+        });
+    }
+}
+</script>
+{% endblock %}
+{% endblock %}

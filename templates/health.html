@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2 class="text-white fw-bold">
+            <i class="bi bi-heart-pulse"></i> 健康管理
+        </h2>
+        <p class="text-white-50">体重、運動、睡眠を記録して健康を管理</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('add_health_log') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> 記録を追加
+        </a>
+    </div>
+</div>
+
+{% if logs %}
+    <div class="row">
+        {% for log in logs %}
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-calendar3"></i> {{ log.date.strftime('%Y年%m月%d日') }}
+                        </h5>
+                        {% if log.mood %}
+                        <span class="badge bg-{% if log.mood == 'great' %}success{% elif log.mood == 'good' %}primary{% elif log.mood == 'okay' %}secondary{% else %}danger{% endif %}">
+                            {% if log.mood == 'great' %}最高
+                            {% elif log.mood == 'good' %}良い
+                            {% elif log.mood == 'okay' %}普通
+                            {% elif log.mood == 'bad' %}悪い
+                            {% else %}最悪{% endif %}
+                        </span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row g-3">
+                        {% if log.weight %}
+                        <div class="col-6">
+                            <div class="p-2 bg-light rounded text-center">
+                                <i class="bi bi-speedometer2 text-primary"></i>
+                                <div class="fw-bold">{{ log.weight }} kg</div>
+                                <small class="text-muted">体重</small>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if log.exercise_minutes %}
+                        <div class="col-6">
+                            <div class="p-2 bg-light rounded text-center">
+                                <i class="bi bi-bicycle text-success"></i>
+                                <div class="fw-bold">{{ log.exercise_minutes }} 分</div>
+                                <small class="text-muted">運動</small>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if log.water_intake %}
+                        <div class="col-6">
+                            <div class="p-2 bg-light rounded text-center">
+                                <i class="bi bi-droplet text-info"></i>
+                                <div class="fw-bold">{{ log.water_intake }} ml</div>
+                                <small class="text-muted">水分</small>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if log.sleep_hours %}
+                        <div class="col-6">
+                            <div class="p-2 bg-light rounded text-center">
+                                <i class="bi bi-moon-stars text-warning"></i>
+                                <div class="fw-bold">{{ log.sleep_hours }} 時間</div>
+                                <small class="text-muted">睡眠</small>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    {% if log.note %}
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            <i class="bi bi-chat-left-text"></i> {{ log.note }}
+                        </small>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <i class="bi bi-heart-pulse display-1 text-muted mb-3"></i>
+            <h4 class="text-muted">健康記録がありません</h4>
+            <p class="text-muted">今日の健康データを記録しましょう！</p>
+            <a href="{{ url_for('add_health_log') }}" class="btn btn-primary">
+                <i class="bi bi-plus-lg"></i> 記録を追加
+            </a>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

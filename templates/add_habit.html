@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="bi bi-plus-circle"></i> 新しい習慣を追加</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('add_habit') }}">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">習慣名 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="name" name="name" required autofocus
+                               placeholder="例: 朝の運動、読書、瞑想">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">説明</label>
+                        <textarea class="form-control" id="description" name="description" rows="2"
+                                  placeholder="この習慣について簡単に説明"></textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="frequency" class="form-label">頻度</label>
+                            <select class="form-select" id="frequency" name="frequency">
+                                <option value="daily" selected>毎日</option>
+                                <option value="weekly">毎週</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <label for="color" class="form-label">カラー</label>
+                            <select class="form-select" id="color" name="color">
+                                <option value="primary">ブルー</option>
+                                <option value="success">グリーン</option>
+                                <option value="danger">レッド</option>
+                                <option value="warning">イエロー</option>
+                                <option value="info">シアン</option>
+                                <option value="secondary">グレー</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="bi bi-lightbulb"></i>
+                        <strong>ヒント:</strong> 小さな習慣から始めましょう。毎日続けられる簡単なことから始めるのがコツです！
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check"></i> 習慣を追加
+                        </button>
+                        <a href="{{ url_for('habits') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x"></i> キャンセル
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

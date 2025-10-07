@@ -1,0 +1,378 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0"><i class="bi bi-question-circle"></i> よくある質問（FAQ）</h3>
+            </div>
+            <div class="card-body p-4">
+                <p class="lead mb-4">
+                    よくある質問とその回答をまとめました。
+                </p>
+                
+                <!-- 基本的な使い方 -->
+                <h5 class="mt-4 mb-3"><i class="bi bi-book"></i> 基本的な使い方</h5>
+                
+                <div class="accordion" id="faqBasic">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                Q1. このアプリは何ができますか？
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqBasic">
+                            <div class="accordion-body">
+                                <p>総合ライフマネジメントアプリは、以下の機能を提供します：</p>
+                                <ul>
+                                    <li><strong>集中タイマー</strong>: 25分集中+5分休憩で効率的に作業</li>
+                                    <li><strong>やることリスト</strong>: タスク管理</li>
+                                    <li><strong>習慣トラッカー</strong>: 毎日の習慣を記録</li>
+                                    <li><strong>健康管理</strong>: 体重、運動、睡眠を記録</li>
+                                    <li><strong>学習管理</strong>: 学習の進捗を管理</li>
+                                    <li><strong>日記</strong>: 毎日の振り返り</li>
+                                    <li><strong>カレンダー</strong>: 予定と記録を統合表示</li>
+                                    <li><strong>目標設定</strong>: 短期・中期・長期の目標管理</li>
+                                    <li><strong>メモ</strong>: クイックメモ</li>
+                                    <li><strong>時間記録</strong>: プロジェクトごとの時間トラッキング</li>
+                                    <li><strong>レポート</strong>: 週次・月次のまとめ</li>
+                                    <li><strong>達成バッジ</strong>: モチベーション向上</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                Q2. インストール方法は？
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqBasic">
+                            <div class="accordion-body">
+                                <ol>
+                                    <li>Python 3.8以上をインストール</li>
+                                    <li>必要なパッケージをインストール: <code>pip install -r requirements.txt</code></li>
+                                    <li>アプリを起動: <code>python app.py</code></li>
+                                    <li>ブラウザで <code>http://localhost:5001</code> を開く</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                Q3. データはどこに保存されますか？
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqBasic">
+                            <div class="accordion-body">
+                                <p><strong>すべてのデータはあなたのPC内にのみ保存されます。</strong></p>
+                                <ul>
+                                    <li>保存場所: <code>productivity.db</code> ファイル</li>
+                                    <li>外部サーバーへの送信: なし</li>
+                                    <li>第三者への提供: なし</li>
+                                    <li>インターネット接続: 不要</li>
+                                </ul>
+                                <div class="alert alert-success mb-0">
+                                    <strong>100%プライバシー保護！</strong> データは完全にあなたの管理下にあります。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- データ管理 -->
+                <h5 class="mt-5 mb-3"><i class="bi bi-database"></i> データ管理</h5>
+                
+                <div class="accordion" id="faqData">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                Q4. データのバックアップ方法は？
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqData">
+                            <div class="accordion-body">
+                                <p><strong>2つの方法があります：</strong></p>
+                                <ol>
+                                    <li>
+                                        <strong>データベースバックアップ</strong>
+                                        <ul>
+                                            <li>設定ページ → データ管理</li>
+                                            <li>「バックアップをダウンロード」をクリック</li>
+                                            <li>.db ファイルがダウンロードされます</li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <strong>JSONエクスポート</strong>
+                                        <ul>
+                                            <li>設定ページ → データ管理</li>
+                                            <li>「JSONをダウンロード」をクリック</li>
+                                            <li>人間が読める形式で保存されます</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                                <div class="alert alert-warning mb-0">
+                                    <strong>推奨:</strong> 週1回のバックアップを習慣にしましょう！
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                                Q5. データを復元する方法は？
+                            </button>
+                        </h2>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqData">
+                            <div class="accordion-body">
+                                <ol>
+                                    <li>アプリを終了</li>
+                                    <li>バックアップファイル（.db）を <code>productivity.db</code> にリネーム</li>
+                                    <li>アプリのフォルダに配置</li>
+                                    <li>アプリを再起動</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                                Q6. アプリを終了してもデータは消えませんか？
+                            </button>
+                        </h2>
+                        <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqData">
+                            <div class="accordion-body">
+                                <p><strong>はい、データは自動的に保存されます。</strong></p>
+                                <ul>
+                                    <li>すべての操作が即座にデータベースに保存されます</li>
+                                    <li>アプリを終了してもデータは残ります</li>
+                                    <li>PCを再起動してもデータは消えません</li>
+                                </ul>
+                                <p class="mb-0">ただし、念のため定期的なバックアップを推奨します。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- トラブルシューティング -->
+                <h5 class="mt-5 mb-3"><i class="bi bi-tools"></i> トラブルシューティング</h5>
+                
+                <div class="accordion" id="faqTrouble">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq7">
+                                Q7. アプリが起動しません
+                            </button>
+                        </h2>
+                        <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqTrouble">
+                            <div class="accordion-body">
+                                <p><strong>以下を確認してください：</strong></p>
+                                <ol>
+                                    <li>Python がインストールされているか: <code>python --version</code></li>
+                                    <li>必要なパッケージがインストールされているか: <code>pip install -r requirements.txt</code></li>
+                                    <li>ポート5001が使用中でないか</li>
+                                    <li>エラーメッセージの内容を確認</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq8">
+                                Q8. リマインダー通知が表示されません
+                            </button>
+                        </h2>
+                        <div id="faq8" class="accordion-collapse collapse" data-bs-parent="#faqTrouble">
+                            <div class="accordion-body">
+                                <p><strong>ブラウザの通知許可を確認してください：</strong></p>
+                                <ol>
+                                    <li>ブラウザの設定を開く</li>
+                                    <li>プライバシーとセキュリティ → サイトの設定</li>
+                                    <li>通知 → localhost を許可</li>
+                                    <li>カレンダーページをリロード</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq9">
+                                Q9. データが消えてしまいました
+                            </button>
+                        </h2>
+                        <div id="faq9" class="accordion-collapse collapse" data-bs-parent="#faqTrouble">
+                            <div class="accordion-body">
+                                <p><strong>バックアップから復元できます：</strong></p>
+                                <ol>
+                                    <li>バックアップファイル（.db または .json）を確認</li>
+                                    <li>.db ファイルがある場合は、Q5の手順で復元</li>
+                                    <li>バックアップがない場合は、残念ながら復元できません</li>
+                                </ol>
+                                <div class="alert alert-danger mb-0">
+                                    <strong>予防策:</strong> 週1回のバックアップを習慣にしましょう！
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq10">
+                                Q10. 他のPCでも使えますか？
+                            </button>
+                        </h2>
+                        <div id="faq10" class="accordion-collapse collapse" data-bs-parent="#faqTrouble">
+                            <div class="accordion-body">
+                                <p><strong>はい、データを移行できます：</strong></p>
+                                <ol>
+                                    <li>元のPCでバックアップをダウンロード</li>
+                                    <li>新しいPCにアプリをインストール</li>
+                                    <li>バックアップファイルを <code>productivity.db</code> として配置</li>
+                                    <li>アプリを起動</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 機能について -->
+                <h5 class="mt-5 mb-3"><i class="bi bi-gear"></i> 機能について</h5>
+                
+                <div class="accordion" id="faqFeatures">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq11">
+                                Q11. 集中タイマーの時間を変更できますか？
+                            </button>
+                        </h2>
+                        <div id="faq11" class="accordion-collapse collapse" data-bs-parent="#faqFeatures">
+                            <div class="accordion-body">
+                                <p><strong>はい、設定ページから変更できます：</strong></p>
+                                <ol>
+                                    <li>ナビゲーションの「設定」をクリック</li>
+                                    <li>集中時間、休憩時間、長休憩時間を変更</li>
+                                    <li>「設定を保存」をクリック</li>
+                                </ol>
+                                <p class="mb-0">推奨: 集中時間 25分、休憩 5分、長休憩 15分</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq12">
+                                Q12. カレンダーに予定を追加するには？
+                            </button>
+                        </h2>
+                        <div id="faq12" class="accordion-collapse collapse" data-bs-parent="#faqFeatures">
+                            <div class="accordion-body">
+                                <p><strong>2つの方法があります：</strong></p>
+                                <ol>
+                                    <li><strong>日付をクリック</strong>: カレンダーの日付をクリックすると予定追加フォームが開きます</li>
+                                    <li><strong>追加ボタン</strong>: 「予定を追加」ボタンをクリック</li>
+                                </ol>
+                                <p class="mb-0">予定は30分前に自動でリマインダー通知されます。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq13">
+                                Q13. 達成バッジはどうやって獲得しますか？
+                            </button>
+                        </h2>
+                        <div id="faq13" class="accordion-collapse collapse" data-bs-parent="#faqFeatures">
+                            <div class="accordion-body">
+                                <p><strong>活動を続けると自動的に獲得できます：</strong></p>
+                                <ul>
+                                    <li><strong>初めの一歩</strong>: 集中タイマーを1回完了</li>
+                                    <li><strong>タイマー初心者</strong>: 10回完了</li>
+                                    <li><strong>タイマーマスター</strong>: 100回完了</li>
+                                    <li><strong>習慣の力</strong>: 習慣を7日連続達成</li>
+                                    <li><strong>継続は力なり</strong>: 30日連続達成</li>
+                                    <li><strong>タスクハンター</strong>: タスクを50個完了</li>
+                                </ul>
+                                <p class="mb-0">「振り返り」→「達成バッジ」で確認できます。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- セキュリティ -->
+                <h5 class="mt-5 mb-3"><i class="bi bi-shield-check"></i> セキュリティ</h5>
+                
+                <div class="accordion" id="faqSecurity">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq14">
+                                Q14. このアプリは安全ですか？
+                            </button>
+                        </h2>
+                        <div id="faq14" class="accordion-collapse collapse" data-bs-parent="#faqSecurity">
+                            <div class="accordion-body">
+                                <p><strong>はい、以下のセキュリティ対策を実装しています：</strong></p>
+                                <ul>
+                                    <li>✅ CSRF 保護</li>
+                                    <li>✅ XSS 対策</li>
+                                    <li>✅ SQL インジェクション対策</li>
+                                    <li>✅ 入力値バリデーション</li>
+                                    <li>✅ セキュリティヘッダー</li>
+                                </ul>
+                                <p class="mb-0">詳細は <code>SECURITY.md</code> をご確認ください。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq15">
+                                Q15. 個人情報は収集されますか？
+                            </button>
+                        </h2>
+                        <div id="faq15" class="accordion-collapse collapse" data-bs-parent="#faqSecurity">
+                            <div class="accordion-body">
+                                <p><strong>いいえ、一切収集しません。</strong></p>
+                                <ul>
+                                    <li>すべてのデータはローカル保存</li>
+                                    <li>外部サーバーへの送信なし</li>
+                                    <li>トラッキングなし</li>
+                                    <li>広告なし</li>
+                                </ul>
+                                <div class="alert alert-success mb-0">
+                                    詳細は<a href="{{ url_for('privacy') }}" class="alert-link">プライバシーポリシー</a>をご確認ください。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- その他 -->
+                <div class="alert alert-info mt-5">
+                    <h6><i class="bi bi-info-circle"></i> 解決しない場合</h6>
+                    <p class="mb-0">
+                        上記で解決しない場合は、<a href="{{ url_for('contact') }}" class="alert-link">お問い合わせページ</a>からご連絡ください。
+                    </p>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="{{ url_for('contact') }}" class="btn btn-primary me-2">
+                        <i class="bi bi-envelope"></i> お問い合わせ
+                    </a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-house"></i> ダッシュボードへ戻る
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

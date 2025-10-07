@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2 class="text-white fw-bold">
+            <i class="bi bi-stopwatch"></i> 時間トラッキング
+        </h2>
+        <p class="text-white-50">プロジェクトごとの時間を記録</p>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body p-4">
+        <h5 class="mb-3">タイマー</h5>
+        {% if running_entry %}
+        <div class="alert alert-success">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="mb-1">
+                        <i class="bi bi-play-circle-fill"></i> 記録中: {{ running_entry.project_name }}
+                    </h6>
+                    <small>{{ running_entry.start_time.strftime('%H:%M') }} から</small>
+                </div>
+                <button onclick="stopTracking({{ running_entry.id }})" class="btn btn-danger">
+                    <i class="bi bi-stop-circle"></i> 停止
+                </button>
+            </div>
+        </div>
+        {% else %}
+        <div class="row">
+            <div class="col-md-8">
+                <input type="text" class="form-control" id="project_name" placeholder="プロジェクト名">
+            </div>
+            <div class="col-md-4">
+                <button onclick="startTracking()" class="btn btn-success w-100">
+                    <i class="bi bi-play-circle"></i> 開始
+                </button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% if entries %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">記録履歴</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>プロジェクト</th>
+                        <th>開始時刻</th>
+                        <th>終了時刻</th>
+                        <th>時間</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in entries %}
+                    <tr>
+                        <td>
+                            <strong>{{ entry.project_name }}</strong>
+                            {% if entry.description %}
+                            <br><small class="text-muted">{{ entry.description }}</small>
+                            {% endif %}
+                        </td>
+                        <td>{{ entry.start_time.strftime('%Y/%m/%d %H:%M') }}</td>
+                        <td>
+                            {% if entry.end_time %}
+                            {{ entry.end_time.strftime('%H:%M') }}
+                            {% else %}
+                            <span class="badge bg-success">記録中</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if entry.duration_minutes %}
+                            <span class="badge bg-primary">{{ entry.duration_minutes }} 分</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+function startTracking() {
+    const projectName = document.getElementById('project_name').value;
+    if (!projectName) {
+        alert('プロジェクト名を入力してください');
+        return;
+    }
+    
+    fetch('/timetracking/start', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({project_name: projectName})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        }
+    });
+}
+
+function stopTracking(entryId) {
+    fetch(`/timetracking/stop/${entryId}`, {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`記録完了: ${data.duration}分`);
+            location.reload();
+        }
+    });
+}
+</script>
+{% endblock %}
+{% endblock %}

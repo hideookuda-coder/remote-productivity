@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2 class="text-white fw-bold">
+            <i class="bi bi-sticky"></i> メモ
+        </h2>
+        <p class="text-white-50">クイックメモとアイデア</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('add_note') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> 新しいメモ
+        </a>
+    </div>
+</div>
+
+{% if notes %}
+    <div class="row">
+        {% for note in notes %}
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100 {% if note.is_pinned %}border-warning{% endif %}">
+                <div class="card-body">
+                    {% if note.is_pinned %}
+                    <div class="badge bg-warning mb-2">
+                        <i class="bi bi-pin-angle-fill"></i> ピン留め
+                    </div>
+                    {% endif %}
+                    
+                    <h5 class="card-title">{{ note.title if note.title else '無題' }}</h5>
+                    <p class="card-text text-muted small">
+                        {{ note.content[:100] }}{% if note.content|length > 100 %}...{% endif %}
+                    </p>
+                    
+                    {% if note.tags %}
+                    <div class="mb-2">
+                        {% for tag in note.tags.split(',') %}
+                        <span class="badge bg-light text-dark">#{{ tag.strip() }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <small class="text-muted">
+                        <i class="bi bi-clock"></i> {{ note.updated_at.strftime('%Y/%m/%d %H:%M') }}
+                    </small>
+                    
+                    <div class="mt-3">
+                        <form method="POST" action="{{ url_for('delete_note', note_id=note.id) }}" 
+                              onsubmit="return confirm('本当に削除しますか？')" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i> 削除
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <i class="bi bi-sticky display-1 text-muted mb-3"></i>
+            <h4 class="text-muted">メモがありません</h4>
+            <p class="text-muted mb-4">思いついたアイデアをメモしましょう！</p>
+            <a href="{{ url_for('add_note') }}" class="btn btn-primary btn-lg">
+                <i class="bi bi-plus-lg"></i> 最初のメモを作成
+            </a>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

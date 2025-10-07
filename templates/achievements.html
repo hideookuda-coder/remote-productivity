@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2 class="text-white fw-bold">
+            <i class="bi bi-trophy"></i> 達成バッジ
+        </h2>
+        <p class="text-white-50">あなたの頑張りを記録！</p>
+    </div>
+</div>
+
+<div class="row">
+    {% for achievement in achievements %}
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card h-100 {% if achievement.unlocked_at %}border-success{% else %}bg-light{% endif %}">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="bi bi-{{ achievement.icon }} display-1 {% if achievement.unlocked_at %}text-warning{% else %}text-muted{% endif %}"></i>
+                </div>
+                
+                <h5 class="card-title">{{ achievement.name }}</h5>
+                <p class="card-text text-muted small">{{ achievement.description }}</p>
+                
+                {% if achievement.unlocked_at %}
+                <div class="badge bg-success mb-2">
+                    <i class="bi bi-check-circle-fill"></i> 達成済み
+                </div>
+                <div>
+                    <small class="text-muted">
+                        {{ achievement.unlocked_at.strftime('%Y年%m月%d日') }} 達成
+                    </small>
+                </div>
+                {% else %}
+                <div class="badge bg-secondary mb-2">
+                    <i class="bi bi-lock-fill"></i> 未達成
+                </div>
+                <div>
+                    <small class="text-muted">
+                        必要: {{ achievement.requirement }}回
+                    </small>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="card mt-4">
+    <div class="card-body p-4">
+        <h5 class="mb-3"><i class="bi bi-info-circle"></i> 実績システムについて</h5>
+        <div class="row">
+            <div class="col-md-6">
+                <h6>🏆 バッジの種類</h6>
+                <ul class="small">
+                    <li><strong>ポモドーロバッジ</strong>: ポモドーロの完了回数</li>
+                    <li><strong>連続達成バッジ</strong>: 習慣の連続達成日数</li>
+                    <li><strong>タスクバッジ</strong>: タスクの完了数</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h6>💡 バッジを獲得するには</h6>
+                <ul class="small">
+                    <li>毎日コツコツと継続する</li>
+                    <li>ポモドーロを活用して集中する</li>
+                    <li>タスクを完了させる</li>
+                    <li>習慣を毎日記録する</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-lg-10">
+        <div class="text-center text-white mb-5">
+            <h1 class="display-3 fw-bold mb-4">
+                <i class="bi bi-lightning-charge-fill"></i> 総合ライフマネジメントアプリ
+            </h1>
+            <p class="lead fs-4">生産性向上から健康管理まで、あなたの生活を総合的にサポート</p>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body text-center p-5">
+                <h2 class="mb-4">🚀 今すぐ使い始めましょう！</h2>
+                <p class="lead mb-4">登録不要・ログイン不要で、すぐに使えます</p>
+                <div class="d-grid gap-3 d-md-flex justify-content-md-center">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg px-5 py-3">
+                        <i class="bi bi-speedometer2"></i> ダッシュボードへ
+                    </a>
+                    <a href="{{ url_for('pomodoro') }}" class="btn btn-success btn-lg px-5 py-3">
+                        <i class="bi bi-alarm"></i> 集中タイマーを開始
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="text-white text-center mb-4">📱 主な機能</h3>
+        
+        <div class="row g-4 mb-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-alarm display-4 text-primary mb-3"></i>
+                        <h5 class="card-title">集中タイマー</h5>
+                        <p class="card-text small text-muted">25分集中→5分休憩</p>
+                        <a href="{{ url_for('pomodoro') }}" class="btn btn-sm btn-outline-primary">開始</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-check2-square display-4 text-success mb-3"></i>
+                        <h5 class="card-title">やることリスト</h5>
+                        <p class="card-text small text-muted">今日やること</p>
+                        <a href="{{ url_for('tasks') }}" class="btn btn-sm btn-outline-success">管理</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-check-circle display-4 text-warning mb-3"></i>
+                        <h5 class="card-title">習慣</h5>
+                        <p class="card-text small text-muted">毎日の習慣記録</p>
+                        <a href="{{ url_for('habits') }}" class="btn btn-sm btn-outline-warning">記録</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-heart-pulse display-4 text-danger mb-3"></i>
+                        <h5 class="card-title">健康</h5>
+                        <p class="card-text small text-muted">体重・運動・睡眠</p>
+                        <a href="{{ url_for('health') }}" class="btn btn-sm btn-outline-danger">記録</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-book display-4 text-info mb-3"></i>
+                        <h5 class="card-title">学習管理</h5>
+                        <p class="card-text small text-muted">スキルアップの進捗追跡</p>
+                        <a href="{{ url_for('learning') }}" class="btn btn-sm btn-outline-info">管理</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-journal-text display-4 text-secondary mb-3"></i>
+                        <h5 class="card-title">日記</h5>
+                        <p class="card-text small text-muted">日々の出来事を記録</p>
+                        <a href="{{ url_for('journal') }}" class="btn btn-sm btn-outline-secondary">書く</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-graph-up display-4 text-primary mb-3"></i>
+                        <h5 class="card-title">統計</h5>
+                        <p class="card-text small text-muted">7日間のグラフ表示</p>
+                        <a href="{{ url_for('statistics') }}" class="btn btn-sm btn-outline-primary">確認</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body p-4">
+                <h4 class="mb-3"><i class="bi bi-lightbulb"></i> 使い方のヒント</h4>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <h6>🌅 朝のルーティン</h6>
+                        <ol class="small">
+                            <li>習慣トラッカーで「朝の運動」をチェック</li>
+                            <li>健康記録で体重と睡眠時間を入力</li>
+                            <li>今日のタスクを追加</li>
+                            <li>ポモドーロで作業開始</li>
+                        </ol>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h6>🌙 夜のルーティン</h6>
+                        <ol class="small">
+                            <li>完了したタスクをマーク</li>
+                            <li>健康記録で運動時間を入力</li>
+                            <li>日記で今日の振り返り</li>
+                            <li>統計で今日の成果を確認</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

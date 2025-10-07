@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2 class="text-white fw-bold">
+            <i class="bi bi-file-earmark-text"></i> 週次・月次まとめ
+        </h2>
+        <p class="text-white-50">あなたの活動をまとめて確認</p>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-calendar-week"></i> 週次レポート（過去7日間）</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6 mb-3">
+                        <div class="p-3 bg-light rounded">
+                            <div class="display-4 text-primary">{{ week_pomodoros }}</div>
+                            <div class="text-muted">ポモドーロ</div>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="p-3 bg-light rounded">
+                            <div class="display-4 text-success">{{ week_tasks }}</div>
+                            <div class="text-muted">完了タスク</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info mb-0">
+                    <h6><i class="bi bi-lightbulb"></i> 週次サマリー</h6>
+                    <ul class="mb-0 small">
+                        <li>1日平均: {{ (week_pomodoros / 7)|round(1) }} ポモドーロ</li>
+                        <li>1日平均: {{ (week_tasks / 7)|round(1) }} タスク完了</li>
+                        <li>総作業時間: 約{{ (week_pomodoros * 25 / 60)|round(1) }} 時間</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-calendar-month"></i> 月次レポート（過去30日間）</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6 mb-3">
+                        <div class="p-3 bg-light rounded">
+                            <div class="display-4 text-primary">{{ month_pomodoros }}</div>
+                            <div class="text-muted">ポモドーロ</div>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="p-3 bg-light rounded">
+                            <div class="display-4 text-success">{{ month_tasks }}</div>
+                            <div class="text-muted">完了タスク</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-success mb-0">
+                    <h6><i class="bi bi-trophy"></i> 月次サマリー</h6>
+                    <ul class="mb-0 small">
+                        <li>1日平均: {{ (month_pomodoros / 30)|round(1) }} ポモドーロ</li>
+                        <li>1日平均: {{ (month_tasks / 30)|round(1) }} タスク完了</li>
+                        <li>総作業時間: 約{{ (month_pomodoros * 25 / 60)|round(1) }} 時間</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body p-4">
+        <h5 class="mb-3"><i class="bi bi-graph-up"></i> パフォーマンス分析</h5>
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <h6>📈 生産性トレンド</h6>
+                <p class="small text-muted">
+                    {% if week_pomodoros > 0 %}
+                    過去7日間で{{ week_pomodoros }}回のポモドーロを完了しました。
+                    {% if week_pomodoros >= 28 %}
+                    素晴らしい！1日4回以上のペースです。
+                    {% elif week_pomodoros >= 14 %}
+                    良いペースです。1日2回以上継続しています。
+                    {% else %}
+                    もう少し頑張りましょう。1日3-4回を目標に！
+                    {% endif %}
+                    {% else %}
+                    まだデータがありません。ポモドーロを始めましょう！
+                    {% endif %}
+                </p>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                <h6>✅ タスク達成率</h6>
+                <p class="small text-muted">
+                    {% if week_tasks > 0 %}
+                    過去7日間で{{ week_tasks }}個のタスクを完了しました。
+                    {% if week_tasks >= 21 %}
+                    驚異的！1日3個以上のタスクを完了しています。
+                    {% elif week_tasks >= 7 %}
+                    順調です。毎日タスクを完了しています。
+                    {% else %}
+                    継続的にタスクを完了させましょう。
+                    {% endif %}
+                    {% else %}
+                    タスクを追加して、達成していきましょう！
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        
+        <div class="alert alert-warning">
+            <h6><i class="bi bi-lightbulb-fill"></i> 改善のヒント</h6>
+            <ul class="mb-0 small">
+                <li>毎朝、今日のタスクを3つ決める</li>
+                <li>ポモドーロを使って集中時間を確保</li>
+                <li>週末に来週の計画を立てる</li>
+                <li>達成したことを振り返り、自分を褒める</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0"><i class="bi bi-envelope"></i> お問い合わせ</h3>
+            </div>
+            <div class="card-body p-4">
+                <p class="lead mb-4">
+                    ご質問、バグ報告、機能要望など、お気軽にお問い合わせください。
+                </p>
+                
+                <div class="row g-4">
+                    <!-- メールでのお問い合わせ -->
+                    <div class="col-md-6">
+                        <div class="card h-100 border-primary">
+                            <div class="card-body text-center p-4">
+                                <i class="bi bi-envelope-fill display-1 text-primary mb-3"></i>
+                                <h5 class="card-title">メールでお問い合わせ</h5>
+                                <p class="card-text text-muted mb-4">
+                                    直接開発者にメールを送信できます。<br>
+                                    24-48時間以内に返信します。
+                                </p>
+                                <a href="mailto:your-email@example.com?subject=【総合ライフマネジメントアプリ】お問い合わせ&body=お問い合わせ内容をご記入ください。%0D%0A%0D%0A【お問い合わせ種別】%0D%0A□ バグ報告%0D%0A□ 機能要望%0D%0A□ 使い方の質問%0D%0A□ その他%0D%0A%0D%0A【詳細】%0D%0A" 
+                                   class="btn btn-primary btn-lg">
+                                    <i class="bi bi-envelope"></i> メールを送信
+                                </a>
+                                <p class="small text-muted mt-3 mb-0">
+                                    your-email@example.com
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- GitHub Issues -->
+                    <div class="col-md-6">
+                        <div class="card h-100 border-success">
+                            <div class="card-body text-center p-4">
+                                <i class="bi bi-github display-1 text-dark mb-3"></i>
+                                <h5 class="card-title">GitHub Issues</h5>
+                                <p class="card-text text-muted mb-4">
+                                    バグ報告や機能要望は GitHub Issues で<br>
+                                    コミュニティと共有できます。
+                                </p>
+                                <a href="https://github.com/yourusername/remote-productivity/issues" 
+                                   target="_blank" class="btn btn-dark btn-lg">
+                                    <i class="bi bi-github"></i> Issues を開く
+                                </a>
+                                <p class="small text-muted mt-3 mb-0">
+                                    GitHub アカウントが必要です
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- お問い合わせの種類 -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-question-circle"></i> お問い合わせの種類</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <h6><i class="bi bi-bug text-danger"></i> バグ報告</h6>
+                                <p class="small text-muted">
+                                    アプリが正常に動作しない、エラーが発生するなど
+                                </p>
+                                <ul class="small">
+                                    <li>エラーメッセージの内容</li>
+                                    <li>再現手順</li>
+                                    <li>使用環境（OS、ブラウザ）</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <h6><i class="bi bi-lightbulb text-warning"></i> 機能要望</h6>
+                                <p class="small text-muted">
+                                    新しい機能の追加、既存機能の改善など
+                                </p>
+                                <ul class="small">
+                                    <li>どんな機能が欲しいか</li>
+                                    <li>その機能で何を実現したいか</li>
+                                    <li>優先度</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <h6><i class="bi bi-question-circle text-info"></i> 使い方の質問</h6>
+                                <p class="small text-muted">
+                                    機能の使い方、設定方法など
+                                </p>
+                                <ul class="small">
+                                    <li>まず <a href="{{ url_for('faq') }}">FAQ</a> をご確認ください</li>
+                                    <li>具体的にどこで困っているか</li>
+                                    <li>やりたいこと</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <h6><i class="bi bi-chat-dots text-success"></i> その他</h6>
+                                <p class="small text-muted">
+                                    感想、提案、協力の申し出など
+                                </p>
+                                <ul class="small">
+                                    <li>アプリの感想</li>
+                                    <li>改善提案</li>
+                                    <li>開発への協力</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- よくある質問 -->
+                <div class="alert alert-info mt-4">
+                    <h6><i class="bi bi-info-circle"></i> お問い合わせの前に</h6>
+                    <p class="mb-2">以下をご確認いただくと、より早く解決できる場合があります：</p>
+                    <ul class="mb-0">
+                        <li><a href="{{ url_for('faq') }}" class="alert-link">よくある質問（FAQ）</a>をご確認ください</li>
+                        <li>各ページの「使い方」セクションをご確認ください</li>
+                        <li>設定ページでバックアップを取ってください</li>
+                    </ul>
+                </div>
+                
+                <!-- 返信について -->
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h6><i class="bi bi-clock"></i> 返信について</h6>
+                        <ul class="mb-0 small">
+                            <li><strong>メール</strong>: 通常24-48時間以内に返信します</li>
+                            <li><strong>GitHub Issues</strong>: コミュニティが回答する場合もあります</li>
+                            <li><strong>緊急の問題</strong>: メールでご連絡ください</li>
+                            <li><strong>週末・祝日</strong>: 返信が遅れる場合があります</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="{{ url_for('faq') }}" class="btn btn-outline-primary me-2">
+                        <i class="bi bi-question-circle"></i> よくある質問
+                    </a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-house"></i> ダッシュボードへ戻る
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

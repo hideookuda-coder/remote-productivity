@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">
+                    <i class="bi bi-journal-text"></i> 
+                    {% if entry.title %}{{ entry.title }}{% else %}無題の日記{% endif %}
+                </h4>
+                <a href="{{ url_for('journal') }}" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> 戻る
+                </a>
+            </div>
+            <div class="card-body p-4">
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-calendar3"></i> 
+                            <strong>{{ entry.date.strftime('%Y年%m月%d日') }}</strong>
+                        </div>
+                        {% if entry.mood %}
+                        <span class="badge bg-{% if entry.mood == 'happy' %}success{% elif entry.mood == 'excited' %}warning{% elif entry.mood == 'sad' %}info{% elif entry.mood == 'anxious' %}danger{% else %}secondary{% endif %} fs-6">
+                            {% if entry.mood == 'happy' %}😊 幸せ
+                            {% elif entry.mood == 'excited' %}🎉 興奮
+                            {% elif entry.mood == 'sad' %}😢 悲しい
+                            {% elif entry.mood == 'anxious' %}😰 不安
+                            {% else %}😐 普通{% endif %}
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <div style="white-space: pre-wrap; line-height: 1.8;">{{ entry.content }}</div>
+                </div>
+                
+                {% if entry.tags %}
+                <div class="mb-4">
+                    <strong class="me-2">タグ:</strong>
+                    {% for tag in entry.tags.split(',') %}
+                    <span class="badge bg-light text-dark me-1">#{{ tag.strip() }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <div class="text-muted small">
+                    <i class="bi bi-clock"></i> 作成日時: {{ entry.created_at.strftime('%Y年%m月%d日 %H:%M') }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
